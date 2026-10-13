@@ -48,6 +48,7 @@ describe("generateWorkforce", () => {
     expect(employees).toHaveLength(10000);
     expect(new Set(employees.map((employee) => employee.email)).size).toBe(10000);
     expect(new Set(employees.map((employee) => employee.employeeCode)).size).toBe(10000);
+    expect(new Set(employees.map((employee) => `${employee.firstName} ${employee.lastName}`)).size).toBe(10000);
     const open = salaries.filter((salary) => salary.effectiveTo === null);
     expect(open).toHaveLength(10000);
   });

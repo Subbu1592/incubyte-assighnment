@@ -105,14 +105,14 @@ export default async function OverviewPage({
                   <td>
                     <Link className="name" href={`/employees/${person.id}`}>
                       {person.name}
-                      <small>{person.jobTitle}</small>
+                      <small>{person.employeeCode} · {person.jobTitle}</small>
                     </Link>
                   </td>
                   <td>{countryByCode(person.countryCode)?.name}</td>
-                  <td>{person.level}</td>
-                  <td className="num">{formatMoney(person.annualAmountMinor, person.currency)}</td>
+                  <td><span className="chip">{person.level}</span></td>
+                  <td className="num"><span className="pay">{formatMoney(person.annualAmountMinor, person.currency)}</span></td>
                   <td className="num">{formatMoney(person.medianUsdMinor, "USD")}</td>
-                  <td>{person.side === "below" ? "Below band" : "Above band"}</td>
+                  <td><span className={`flag ${person.side}`}>{person.side === "below" ? "Below band" : "Above band"}</span></td>
                 </tr>
               ))}
             </tbody>

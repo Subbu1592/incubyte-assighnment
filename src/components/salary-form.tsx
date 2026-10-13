@@ -52,7 +52,7 @@ export function SalaryForm({
   }
 
   return (
-    <form className="panel form" onSubmit={onSubmit}>
+    <form className="panel padded form" onSubmit={onSubmit}>
       <h2>Record a pay change</h2>
       <p className="hint">The current salary stays in history and closes the day before this effective date.</p>
       {error ? <p className="error">{error}</p> : null}

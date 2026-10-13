@@ -19,9 +19,9 @@ export default async function EmployeePage({ params }: { params: Promise<{ id: s
 
   return (
     <>
-      <p className="eyebrow"><Link href="/employees">People</Link></p>
+      <p className="crumb"><Link href="/employees">← People</Link></p>
       <div className="profile">
-        <section className="panel identity">
+        <section className="panel padded identity">
           <h2>{employee.firstName} {employee.lastName}</h2>
           <div className="meta">
             <span className={`status ${employee.status}`}>{STATUS_LABELS[employee.status as Status]}</span>
@@ -53,7 +53,7 @@ export default async function EmployeePage({ params }: { params: Promise<{ id: s
         </section>
 
         {employee.status === "terminated" ? (
-          <section className="panel form">
+          <section className="panel padded form">
             <h2>No new salary</h2>
             <p className="hint">Terminated employees stay on record. A new salary starts only after they are active again.</p>
           </section>

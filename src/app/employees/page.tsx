@@ -22,66 +22,64 @@ export default async function PeoplePage({
     <>
       <header className="page-head">
         <div>
-          <p className="eyebrow">Directory</p>
           <h1>People</h1>
           <p className="lede">
-            Showing {start.toLocaleString("en-US")}–{end.toLocaleString("en-US")} of {page.total.toLocaleString("en-US")}.
+            {start.toLocaleString("en-US")}–{end.toLocaleString("en-US")} of {page.total.toLocaleString("en-US")} employees
           </p>
         </div>
       </header>
 
-      <form className="filters" action="/employees" method="get">
-        <label>
-          Search
-          <input name="q" defaultValue={query.q ?? ""} placeholder="Name, email, or ACME code" />
-        </label>
-        <label>
-          Country
-          <select name="country" defaultValue={query.country ?? ""}>
-            <option value="">Any</option>
-            {COUNTRIES.map((country) => (
-              <option key={country.code} value={country.code}>
-                {country.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Department
-          <select name="department" defaultValue={query.department ?? ""}>
-            <option value="">Any</option>
-            {DEPARTMENTS.map((department) => (
-              <option key={department}>{department}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Level
-          <select name="level" defaultValue={query.level ?? ""}>
-            <option value="">Any</option>
-            {LEVELS.map((level) => (
-              <option key={level}>{level}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Status
-          <select name="status" defaultValue={query.status ?? ""}>
-            <option value="">Any</option>
-            {STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {STATUS_LABELS[status]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button type="submit">Filter</button>
-        <Link className="button secondary" href="/employees">
-          Clear
-        </Link>
-      </form>
-
       <section className="panel">
+        <form className="toolbar" action="/employees" method="get">
+          <label>
+            Search
+            <input name="q" defaultValue={query.q ?? ""} placeholder="Name, email, or employee code" />
+          </label>
+          <label>
+            Country
+            <select name="country" defaultValue={query.country ?? ""}>
+              <option value="">Any</option>
+              {COUNTRIES.map((country) => (
+                <option key={country.code} value={country.code}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Department
+            <select name="department" defaultValue={query.department ?? ""}>
+              <option value="">Any</option>
+              {DEPARTMENTS.map((department) => (
+                <option key={department}>{department}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Level
+            <select name="level" defaultValue={query.level ?? ""}>
+              <option value="">Any</option>
+              {LEVELS.map((level) => (
+                <option key={level}>{level}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Status
+            <select name="status" defaultValue={query.status ?? ""}>
+              <option value="">Any</option>
+              {STATUSES.map((status) => (
+                <option key={status} value={status}>
+                  {STATUS_LABELS[status]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button type="submit">Apply</button>
+          <Link className="button secondary" href="/employees">
+            Clear
+          </Link>
+        </form>
         {page.employees.length === 0 ? (
           <p className="empty">No one matches these filters.</p>
         ) : (
@@ -101,17 +99,23 @@ export default async function PeoplePage({
                 {page.employees.map((employee) => (
                   <tr key={employee.id}>
                     <td>
-                      <Link className="name" href={`/employees/${employee.id}`}>
-                        {employee.firstName} {employee.lastName}
-                        <small>{employee.employeeCode} · {employee.jobTitle}</small>
-                      </Link>
+                      <div className="who">
+                        <span className="avatar" style={{ background: avatarColor(employee.firstName + employee.lastName) }}>
+                          {employee.firstName[0]}
+                          {employee.lastName[0]}
+                        </span>
+                        <Link className="name" href={`/employees/${employee.id}`}>
+                          {employee.firstName} {employee.lastName}
+                          <small>{employee.employeeCode} · {employee.jobTitle}</small>
+                        </Link>
+                      </div>
                     </td>
                     <td>{countryByCode(employee.countryCode)?.name}</td>
                     <td>{employee.department}</td>
-                    <td>{employee.level}</td>
+                    <td><span className="chip">{employee.level}</span></td>
                     <td><span className={`status ${employee.status}`}>{STATUS_LABELS[employee.status as keyof typeof STATUS_LABELS]}</span></td>
                     <td className="num">
-                      {formatMoney(employee.annualAmountMinor, employee.currency)}
+                      <span className="pay">{formatMoney(employee.annualAmountMinor, employee.currency)}</span>
                       <span className="sub">{formatMoney(employee.usdMinor, "USD")} USD</span>
                     </td>
                   </tr>
@@ -120,17 +124,24 @@ export default async function PeoplePage({
             </table>
           </div>
         )}
+        <div className="pager">
+          <span>Page {page.page} of {page.pageCount}</span>
+          <nav aria-label="Pagination">
+            {page.page > 1 ? <Link href={href(query, page.page - 1)}>Previous</Link> : null}
+            {page.page < page.pageCount ? <Link href={href(query, page.page + 1)}>Next</Link> : null}
+          </nav>
+        </div>
       </section>
-
-      <div className="pager">
-        <span>Page {page.page} of {page.pageCount}</span>
-        <nav aria-label="Pagination">
-          {page.page > 1 ? <Link href={href(query, page.page - 1)}>Previous</Link> : null}
-          {page.page < page.pageCount ? <Link href={href(query, page.page + 1)}>Next</Link> : null}
-        </nav>
-      </div>
     </>
   );
+}
+
+const AVATAR_COLORS = ["#0f766e", "#1d4ed8", "#b45309", "#7c3aed", "#be123c", "#0369a1", "#4338ca", "#047857"];
+
+function avatarColor(name: string): string {
+  let hash = 0;
+  for (const char of name) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
 }
 
 function href(query: EmployeeQuery, page: number): string {

@@ -42,19 +42,29 @@ export type GeneratedSalary = {
 };
 
 const FIRST_NAMES = [
-  "Aisha", "Arjun", "Mei", "Lucas", "Sofia", "Noah", "Priya", "Elena",
-  "Omar", "Hannah", "Kenji", "Amelia", "Rohan", "Fatima", "Leo", "Chloe",
-  "Diego", "Ananya", "Jonas", "Maya", "Hugo", "Leila", "Ethan", "Sara",
-  "Nikhil", "Ines", "Owen", "Yara", "Felix", "Nora", "Kabir", "Iris",
-  "Mateo", "Ava", "Sanjay", "Freya", "Adam", "Layla", "Theo", "Zara",
+  "Aisha", "Arjun", "Mei", "Lucas", "Sofia", "Noah", "Priya", "Elena", "Omar", "Hannah",
+  "Kenji", "Amelia", "Rohan", "Fatima", "Leo", "Chloe", "Diego", "Ananya", "Jonas", "Maya",
+  "Hugo", "Leila", "Ethan", "Sara", "Nikhil", "Ines", "Owen", "Yara", "Felix", "Nora",
+  "Kabir", "Iris", "Mateo", "Ava", "Sanjay", "Freya", "Adam", "Layla", "Theo", "Zara",
+  "Hana", "Victor", "Nadia", "Samuel", "Amina", "Oscar", "Meera", "Elias", "Noor", "Caleb",
+  "Andre", "Lina", "Hiro", "Clara", "Yusuf", "Emilia", "Ravi", "Isla", "Tomas", "Amira",
+  "Nico", "Sana", "Ivan", "Grace", "Farid", "Lucia", "Dev", "Mara", "Jules", "Aya",
+  "Patrick", "Rhea", "Emil", "Dina", "Pia", "Karim", "Nina", "Lewis", "Rosa", "Idris",
+  "Tara", "Anton", "Willa", "Soren", "Mina", "Kian", "Esme", "Bruno", "Hala", "Nolan",
+  "Diya", "Arman", "Cora", "Vijay", "Elise", "Rafael", "Bianca", "Kunal", "Petra", "Samir",
 ];
 
 const LAST_NAMES = [
-  "Sharma", "Patel", "Garcia", "Muller", "Silva", "Khan", "Nguyen", "Cohen",
-  "Rossi", "Andersen", "Ibrahim", "Kim", "Costa", "Nowak", "Dubois", "Singh",
-  "Almeida", "Berg", "Chowdhury", "Fischer", "Hassan", "Ito", "Jensen", "Kaur",
-  "Lopez", "Moreau", "Nair", "Okoye", "Petrov", "Quinn", "Reyes", "Sato",
-  "Taylor", "Ueda", "Vogel", "Walsh", "Xu", "Young", "Zahir", "Brooks",
+  "Sharma", "Patel", "Garcia", "Muller", "Silva", "Khan", "Nguyen", "Cohen", "Rossi", "Andersen",
+  "Ibrahim", "Kim", "Costa", "Nowak", "Dubois", "Singh", "Almeida", "Berg", "Chowdhury", "Fischer",
+  "Hassan", "Ito", "Jensen", "Kaur", "Lopez", "Moreau", "Nair", "Okoye", "Petrov", "Quinn",
+  "Reyes", "Sato", "Taylor", "Ueda", "Vogel", "Walsh", "Xu", "Young", "Zahir", "Brooks",
+  "Ahmed", "Bennett", "Carter", "Das", "Edwards", "Fernandes", "Gupta", "Hoffman", "Iyer", "Johansson",
+  "Kapoor", "Laurent", "Mensah", "Nakamura", "Osei", "Park", "Rahman", "Schmidt", "Thomas", "Usman",
+  "Vasquez", "Wagner", "Xavier", "Yamamoto", "Zhou", "Abbott", "Bose", "Clark", "Diaz", "Engel",
+  "Foster", "Ghosh", "Hansen", "Iqbal", "Joshi", "Keller", "Larsen", "Mehta", "Novak", "Owens",
+  "Pereira", "Reddy", "Santos", "Traore", "Ullah", "Verma", "Weber", "Yadav", "Zimmerman", "Adebayo",
+  "Becker", "Chaudhary", "Dutta", "Eriksson", "Fujita", "Graham", "Horvat", "Ivanov", "Kowalski", "Lindgren",
 ];
 
 const HIRE_START = Date.UTC(2016, 0, 1);
@@ -120,8 +130,8 @@ export function generateWorkforce(count: number, seed = SEED): { employees: Gene
     const [bandMin, bandMax] = LEVEL_BANDS_USD[level];
     const usdMajor = bandMin + rng() * (bandMax - bandMin);
     const factor = employmentType === "part_time" ? 0.6 : 1;
-    const firstName = FIRST_NAMES[Math.floor(rng() * FIRST_NAMES.length)];
-    const lastName = LAST_NAMES[Math.floor(rng() * LAST_NAMES.length)];
+    const firstName = FIRST_NAMES[index % FIRST_NAMES.length];
+    const lastName = LAST_NAMES[Math.floor(index / FIRST_NAMES.length) % LAST_NAMES.length];
 
     const events: { from: string; amount: number; reason: string }[] = [
       { from: hireDate, amount: localMinor(usdMajor, country, factor), reason: "hire" },
