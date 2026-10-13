@@ -4,7 +4,7 @@
 
 10,000 employees and a short salary history fit comfortably in one file. SQLite gives transactions, a partial unique index, and no extra service to run. The cost is deployment: the file must live on a persistent disk.
 
-Vercel-style serverless is a poor fit. The filesystem is ephemeral, and native `better-sqlite3` does not match that model. The supported shape is `next start` or the included Dockerfile, with `data/` on a volume. If ACME later needed several app instances, I would move this schema to Postgres rather than invent a shared-SQLite layer.
+Vercel-style serverless is a poor fit. The filesystem is ephemeral, so the file would vanish between requests. The supported shape is `next start` or the included Dockerfile, with `data/` on a volume. SQLite comes from Node’s built-in `node:sqlite` (Node 22.13 or newer), which avoids a native addon and a compile step. If ACME later needed several app instances, I would move this schema to Postgres rather than invent a shared-SQLite layer.
 
 ## Integers for money, a fixed rate card for comparison
 

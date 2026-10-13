@@ -25,6 +25,10 @@ The agent was not asked to “build a salary app” in one undifferentiated pass
 - What “outside the band” means.
 - The choice to keep one Node process and a file database.
 
+## A correction during the build
+
+`better-sqlite3` did not compile on this machine because the Xcode license was not accepted, so the native addon could not be built. Database access was switched to Node’s built-in `node:sqlite`. The schema, the one-open-salary index, and the tests stayed the same. That is the dependency I would choose again: no compile step, same SQL.
+
 ## Commit history
 
 Commits are split by layer: requirements, project setup, domain, database, server API, interface, then the runbook. They were produced in one working session with the agent. The timestamps are close together on purpose. The split is so a reviewer can read the evolution, not so the history pretends to be several days of solo work.
